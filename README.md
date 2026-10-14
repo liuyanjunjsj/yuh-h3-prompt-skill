@@ -49,7 +49,7 @@ YUH Studio 的画布助手（小黑）自带出厂技能。我们**不改动任�
 | 远程 | 地址 | 用途 |
 |---|---|---|
 | GitHub | https://github.com/liuyanjunjsj/yuh-h3-prompt-skill | 主仓 |
-| CNB（腾讯云） | https://cnb.cool/shuiyi/yuh-h3-prompt-skill | 备份 + 网页端随手改 |
+| CNB（腾讯云） | https://cnb.cool/liuyanjunjsj/yuh-h3-prompt-skill | 备份 + 网页端随手改 |
 
 本地仓库路径：`C:\Users\liuya\Documents\Trae-CN\repos\yuh-h3-prompt-skill`
 
