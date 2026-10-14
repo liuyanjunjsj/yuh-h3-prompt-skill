@@ -3,6 +3,8 @@
 > 一套跑在 [YUH Studio](https://www.yuh.ai/) 画布 + MiniMax H3 视频模型上的**提示词技能**：覆盖「小说 → 分镜 → 提示词 → 审查 → 生成 → 拼片」全链路的创作规范与避坑手册。
 >
 > **它解决一个问题**：单镜头看惊艳，整片接不上——光线跳变、道具漂移、造型崩坏、台词时间轴失控。这些都是我们和外部创作者真金白银烧出来的坑，本技能把它们变成可执行规则。
+>
+> **不只是文档**：`mcp/` 目录内含即用型 MCP server（36 个工具），其中 `yuh_drama_skill` 工具直接吐出本技能全文——提示词技能与画布操作能力融合成一个 server，智能体装一个 MCP 就是「技能 + 手」全套。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![平台](https://img.shields.io/badge/平台-YUH_Studio_画布-blue)
@@ -94,6 +96,37 @@ YUH Studio 的画布助手（社区昵称「小黑」）自带出厂技能，负
 
 改了技能内容后同名覆盖：画布技能管理里编辑粘贴全文保存，或让画布助手调用 save_skill 同名覆盖。
 
+### 4. 装画布 MCP（让智能体直接操作画布）
+
+`mcp/` 目录是即用型 MCP server（Python 3.10+，依赖 `mcp httpx pydantic`）：
+
+```powershell
+cd mcp
+python -m venv .venv
+.venv\Scripts\pip install mcp httpx pydantic -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+智能体 MCP 配置（Trae CN 写 `%APPDATA%\Trae CN\User\mcp.json`，WorkBuddy 写 `%USERPROFILE%\.codebuddy\mcp.json`）：
+
+```json
+"yuh": {
+  "command": "<部署目录>\\mcp\\.venv\\Scripts\\python.exe",
+  "args": ["-X", "utf8", "<部署目录>\\mcp\\server.py"]
+}
+```
+
+装好后的关键工具：
+
+| 工具 | 作用 |
+|---|---|
+| `yuh_drama_skill` | 取本技能全文（写多镜连续剧提示词前必调） |
+| `yuh_canvas_enable` / `yuh_canvas_list` / `yuh_canvas_add` / `yuh_canvas_update` / `yuh_canvas_run` | 画布 SOP 与节点链路 |
+| `yuh_canvas_extract_frame` | 抽帧（尾帧续接用） |
+| `yuh_studio_call('utilities:merge-videos', ...)` | 画布自带自动剪辑拼合 |
+| `yuh_status` / `yuh_env_check` | 连接与环境体检 |
+
+**画布类工具需要 YUH Studio 桌面端保持运行**（MCP 自动探测其端口连接）；`yuh_drama_skill` 不依赖画布，没有 YUH Studio 的机器也能取技能写提示词。
+
 ## 六、技术方案
 
 完整技术方案（管线架构图、分层可控理念、六阶段详解、H3 机理分析、实战案例）见：
@@ -136,6 +169,10 @@ yuh-h3-prompt-skill/
 │   └── TECHNICAL.md                   ← 技术方案（管线架构/六阶段详解/机理分析/实战案例）
 ├── skill/
 │   └── yuh-drama-prompt-skill.md      ← 技能全文（装进画布时整段复制）
+├── mcp/
+│   ├── server.py                      ← YUH 画布 MCP server（36 工具，含 yuh_drama_skill）
+│   ├── drama_skill.md                 ← server 内置技能文件（与 skill/ 同源）
+│   └── test_smoke.py                  ← 冒烟测试
 └── report/
     └── h3-longfilm-pitfalls-v2.html   ← 避坑图文报告（自包含双击即看）
 ```

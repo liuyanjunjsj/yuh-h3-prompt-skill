@@ -1,0 +1,7 @@
+# Python
+__pycache__/
+*.pyc
+
+# MCP 运行时与本地产物
+mcp/.venv/
+mcp/port.json
